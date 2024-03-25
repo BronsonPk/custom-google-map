@@ -13,13 +13,16 @@ function initMap() {
             geojsonLayer.addGeoJson(data);
             geojsonLayer.setMap(map);
 
-            // Customize the style of the GeoJSON features (optional)
+            // Customize the style of the GeoJSON features
             geojsonLayer.setStyle(feature => {
-                // Customize the style based on feature properties
-                // Example: Set stroke color and width for lines
+                const icon = feature.getProperty("icon");
                 return {
+                    icon: icon,
                     strokeColor: feature.getProperty("stroke"),
                     strokeWeight: feature.getProperty("stroke-width"),
+                    strokeOpacity: feature.getProperty("stroke-opacity"),
+                    fillColor: feature.getProperty("fill"),
+                    fillOpacity: feature.getProperty("fill-opacity")
                 };
             });
 
