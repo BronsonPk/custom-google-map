@@ -4,11 +4,28 @@ function initMap() {
         zoom: 15,
     });
 
-    // Load the KML file
-    const kmlLayer = new google.maps.KmlLayer({
-        url: "path/to/your/kml/file.kml",
-        map: map,
-    });
+    // Load the GeoJSON file
+    fetch("custom_map.geojson")
+        .then(response => response.json())
+        .then(data => {
+            // Create a GeoJSON data layer and add it to the map
+            const geojsonLayer = new google.maps.Data();
+            geojsonLayer.addGeoJson(data);
+            geojsonLayer.setMap(map);
+
+            // Customize the style of the GeoJSON features (optional)
+            geojsonLayer.setStyle(feature => {
+                // Customize the style based on feature properties
+                // Example: Set stroke color and width for lines
+                return {
+                    strokeColor: feature.getProperty("stroke"),
+                    strokeWeight: feature.getProperty("stroke-width"),
+                };
+            });
+        })
+        .catch(error => {
+            console.error("Error loading GeoJSON file:", error);
+        });
 }
 
 window.initMap = initMap;
