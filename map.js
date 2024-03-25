@@ -22,10 +22,23 @@ function initMap() {
                     strokeWeight: feature.getProperty("stroke-width"),
                 };
             });
+
+            // Fit the map bounds to the GeoJSON layer
+            const bounds = new google.maps.LatLngBounds();
+            geojsonLayer.forEach(feature => {
+                if (feature.getGeometry().getType() === "Point") {
+                    bounds.extend(feature.getGeometry().get());
+                } else {
+                    feature.getGeometry().getArray().forEach(path => {
+                        path.getArray().forEach(coord => {
+                            bounds.extend(coord);
+                        });
+                    });
+                }
+            });
+            map.fitBounds(bounds);
         })
         .catch(error => {
             console.error("Error loading GeoJSON file:", error);
         });
 }
-
-window.initMap = initMap;
